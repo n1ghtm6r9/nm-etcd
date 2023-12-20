@@ -1,3 +1,4 @@
+import { NotFoundError } from '@nmxjs/errors';
 import { Inject, Injectable } from '@nestjs/common';
 import { IEtcdClient } from '../interfaces';
 import { etcdClientKey } from '../constants';
@@ -10,5 +11,13 @@ export class GetEntityService {
     this.etcd
       .get(`${path}${id ? `/${id}` : ''}`)
       .json()
-      .then((res: any) => res || null);
+      .then((res: any) => {
+        if (!res) {
+          throw new NotFoundError({
+            entityName: path,
+            searchValue: id,
+          });
+        }
+        return res;
+      });
 }
