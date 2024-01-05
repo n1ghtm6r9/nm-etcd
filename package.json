@@ -1,6 +1,6 @@
 {
   "name": "@nmxjs/etcd",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -25,9 +25,9 @@
     "typescript": "^5.1.6"
   },
   "dependencies": {
-    "@nmxjs/config": "^1.0.0",
+    "@nmxjs/config": "^1.0.5",
     "@nmxjs/errors": "^1.0.3",
-    "@nmxjs/utils": "^1.0.0",
+    "@nmxjs/utils": "^1.0.4",
     "etcd3": "^1.1.2"
   }
 }
