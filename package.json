@@ -1,6 +1,6 @@
 {
   "name": "@nmxjs/etcd",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -26,10 +26,10 @@
   },
   "dependencies": {
     "@nmxjs/errors": "^1.0.3",
-    "@nmxjs/utils": "^1.0.10",
+    "@nmxjs/utils": "^1.0.13",
     "etcd3": "^1.1.2"
   },
   "peerDependencies": {
-    "@nmxjs/config": "^1.0.10"
+    "@nmxjs/config": "^1.0.11"
   }
 }
