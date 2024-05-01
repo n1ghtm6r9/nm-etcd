@@ -37,24 +37,24 @@ import * as Services from './services';
         createSingleEntityService: Services.CreateSingleEntityService,
         watchChangesService: Services.WatchChangesService,
       ): IRepositoryFactoryService => ({
-        create: path => ({
+        create: ({ path, name }) => ({
           get: () => getEntitiesService.call(path),
-          getOne: id => getEntityService.call(path, id),
+          getOne: id => getEntityService.call(name, path, id),
           create: options => createEntitiesService.call(path, options),
           update: options => updateEntityService.call(path, options),
           delete: id => deleteEntityService.call(path, id),
           watch: () => watchChangesService.call(path),
         }),
-        createSingle: path => ({
-          get: () => getEntityService.call(path),
+        createSingle: ({ path, name }) => ({
+          get: () => getEntityService.call(name, path),
           set: options => createSingleEntityService.call(path, options),
           remove: () => deleteEntityService.call(path),
         }),
-        createChild: ({ parentPath, childPath }) => {
+        createChild: ({ parentPath, childPath, name }) => {
           const buildPath = (parentId: string) => `${parentPath}/${parentId}/${childPath}`;
           return {
             get: parentId => getEntitiesService.call(buildPath(parentId)),
-            getOne: (parentId, id) => getEntityService.call(buildPath(parentId), id),
+            getOne: (parentId, id) => getEntityService.call(name, buildPath(parentId), id),
             create: (parentId, options) => createEntitiesService.call(buildPath(parentId), options),
             update: (parentId, options) => updateEntityService.call(buildPath(parentId), options),
             delete: (parentId, id) => deleteEntityService.call(buildPath(parentId), id),

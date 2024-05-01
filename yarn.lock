@@ -62,17 +62,17 @@
   resolved "https://registry.yarnpkg.com/@nmxjs/constants/-/constants-1.0.1.tgz#b3af8d336e2c04f2bf8edd5d4a9c614cf00a50cb"
   integrity sha512-JoGvXqUq2CM/YsqjqmQTcascnY6ui9xecBTRgkFsQicw78PqCdXt0/fYfK4D4nWVcyrWDxjMG9d5YhIR3dt2GA==
 
-"@nmxjs/errors@^1.0.3":
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/@nmxjs/errors/-/errors-1.0.3.tgz#c82a826de393bfe8cbd6f36e7113a5821b0dc1d1"
-  integrity sha512-utMBW1RFi6KgmrKFWmb4MrP7mFPjJHYJondXw8POgUYPAdJkaxDarbflEUEjsrg1m8S9SwiNOcNLEGYepM3s+A==
+"@nmxjs/errors@^1.0.9":
+  version "1.0.9"
+  resolved "https://registry.yarnpkg.com/@nmxjs/errors/-/errors-1.0.9.tgz#15021908a8c75a18f3c7775cbcc12bd81dfd6603"
+  integrity sha512-UizQ8RWn5FoZQ6LD0zR8tKrY/x86Y5uNx7AbRUi5tgqLOMIQqmoR3X2tLwh/jhFzhGJl0jo/x0NE/yJ7G84nWA==
   dependencies:
     "@nestjs/microservices" "^10.2.10"
 
-"@nmxjs/utils@^1.0.13":
-  version "1.0.13"
-  resolved "https://registry.yarnpkg.com/@nmxjs/utils/-/utils-1.0.13.tgz#e845aec2390c29b2ab826103369b956f84fa0ea9"
-  integrity sha512-YBRjHmU9OyX0y9oQ2CfOwTuP7KD0xUqvbLm1srlS51Z2aKqUBcd33C4etFPcZJFo8At4p0A1CDNCMDLQJ5NorA==
+"@nmxjs/utils@^1.0.15":
+  version "1.0.15"
+  resolved "https://registry.yarnpkg.com/@nmxjs/utils/-/utils-1.0.15.tgz#ab4af40142b111e2b433706fc1ac3057e9e5a556"
+  integrity sha512-6tYQFHgW/jo7tBvsIwQpzsdL2djVHdO333SuIoNAvtKiZ2Ozp5niVE/mPuJtdiWa4fe1J88I1FjE0k5isQcPhg==
   dependencies:
     "@nestjs/common" "^10.3.0"
     "@nmxjs/constants" "^1.0.1"

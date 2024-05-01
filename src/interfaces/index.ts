@@ -1,5 +1,6 @@
 export * from './IEtcdClient';
 export * from './IRepository';
+export * from './ICreateRepositoryOptions';
 export * from './IRepositoryFactoryService';
 export * from './ICreateEntityOptions';
 export * from './ICreateEntityResult';
@@ -7,4 +8,5 @@ export * from './IUpdateEntityOptions';
 export * from './ICreateSingleEntityOptions';
 export * from './IChildRepository';
 export * from './ISingleRepository';
+export * from './IGetOneEntityOptions';
 export * from './ICreateChildRepositoryOptions';

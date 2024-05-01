@@ -1,21 +1,26 @@
 import { NotFoundError } from '@nmxjs/errors';
 import { Inject, Injectable } from '@nestjs/common';
-import { IEtcdClient } from '../interfaces';
+import { IEtcdClient, IGetOneEntityOptions } from '../interfaces';
 import { etcdClientKey } from '../constants';
 
 @Injectable()
 export class GetEntityService {
   constructor(@Inject(etcdClientKey) protected readonly etcd: IEtcdClient) {}
 
-  public call = (path: string, id?: string) =>
+  public call = (entityName: string, path: string, idOrOptions?: string | IGetOneEntityOptions) =>
     this.etcd
-      .get(`${path}${id ? `/${id}` : ''}`)
+      .get(`${path}${idOrOptions ? `/${typeof idOrOptions === 'object' ? idOrOptions.id : idOrOptions}` : ''}`)
       .json()
       .then((res: any) => {
-        if (!res) {
+        if (!res && typeof idOrOptions === 'object' && idOrOptions.reject) {
           throw new NotFoundError({
-            entityName: path,
-            searchValue: id,
+            entityName,
+            search: [
+              {
+                field: 'id',
+                value: idOrOptions.id,
+              },
+            ],
           });
         }
         return res;
