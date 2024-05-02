@@ -9,4 +9,5 @@ export * from './ICreateSingleEntityOptions';
 export * from './IChildRepository';
 export * from './ISingleRepository';
 export * from './IGetOneEntityOptions';
+export * from './IChildSingleRepository';
 export * from './ICreateChildRepositoryOptions';

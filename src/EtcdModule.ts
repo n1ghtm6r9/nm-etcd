@@ -48,7 +48,7 @@ import * as Services from './services';
         createSingle: ({ path, name }) => ({
           get: () => getEntityService.call(name, path),
           set: options => createSingleEntityService.call(path, options),
-          remove: () => deleteEntityService.call(path),
+          delete: () => deleteEntityService.call(path),
         }),
         createChild: ({ parentPath, childPath, name }) => {
           const buildPath = (parentId: string) => `${parentPath}/${parentId}/${childPath}`;
@@ -59,6 +59,14 @@ import * as Services from './services';
             update: (parentId, options) => updateEntityService.call(buildPath(parentId), options),
             delete: (parentId, id) => deleteEntityService.call(buildPath(parentId), id),
             watch: () => watchChangesService.call(parentPath),
+          };
+        },
+        createSingleChild: ({ parentPath, childPath, name }) => {
+          const buildPath = (parentId: string) => `${parentPath}/${parentId}/${childPath}`;
+          return {
+            get: parentId => getEntityService.call(name, buildPath(parentId)),
+            set: (parentId, options) => createSingleEntityService.call(buildPath(parentId), options),
+            delete: parentId => deleteEntityService.call(buildPath(parentId)),
           };
         },
       }),
