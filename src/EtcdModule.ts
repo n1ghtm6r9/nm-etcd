@@ -1,13 +1,13 @@
 import { Etcd3 } from 'etcd3';
-import { Global, Module } from '@nestjs/common';
+import { DynamicModule, Global, Module } from '@nestjs/common';
 import { configKey, IConfig } from '@nmxjs/config';
 import { etcdClientKey, repositoryFactoryServiceKey } from './constants';
-import { IEtcdClient, IRepositoryFactoryService } from './interfaces';
+import { IEtcdClient, IEtcdModuleOptions, IRepositoryFactoryService } from './interfaces';
 import * as Services from './services';
 
-@Global()
-@Module({
-  providers: [
+const buildProviders = ({ entitiesPrefix }: IEtcdModuleOptions = {}) => {
+  const withPrefix = (path: string) => (entitiesPrefix ? `${entitiesPrefix}/${path}` : path);
+  return [
     ...Object.values(Services),
     {
       provide: etcdClientKey,
@@ -38,20 +38,20 @@ import * as Services from './services';
         watchChangesService: Services.WatchChangesService,
       ): IRepositoryFactoryService => ({
         create: ({ path, name }) => ({
-          get: () => getEntitiesService.call(path),
-          getOne: id => getEntityService.call(name, path, id),
-          create: options => createEntitiesService.call(path, options),
-          update: options => updateEntityService.call(path, options),
-          delete: id => deleteEntityService.call(path, id),
-          watch: () => watchChangesService.call(path),
+          get: () => getEntitiesService.call(withPrefix(path)),
+          getOne: id => getEntityService.call(name, withPrefix(path), id),
+          create: options => createEntitiesService.call(withPrefix(path), options),
+          update: options => updateEntityService.call(withPrefix(path), options),
+          delete: id => deleteEntityService.call(withPrefix(path), id),
+          watch: () => watchChangesService.call(withPrefix(path)),
         }),
         createSingle: ({ path, name }) => ({
-          get: () => getEntityService.call(name, path),
-          set: options => createSingleEntityService.call(path, options),
-          delete: () => deleteEntityService.call(path),
+          get: () => getEntityService.call(name, withPrefix(path)),
+          set: options => createSingleEntityService.call(withPrefix(path), options),
+          delete: () => deleteEntityService.call(withPrefix(path)),
         }),
         createChild: ({ parentPath, childPath, name }) => {
-          const buildPath = (parentId: string) => `${parentPath}/${parentId}/${childPath}`;
+          const buildPath = (parentId: string) => withPrefix(`${parentPath}/${parentId}/${childPath}`);
           return {
             get: parentId => getEntitiesService.call(buildPath(parentId)),
             getOne: (parentId, id) => getEntityService.call(name, buildPath(parentId), id),
@@ -62,7 +62,7 @@ import * as Services from './services';
           };
         },
         createSingleChild: ({ parentPath, childPath, name }) => {
-          const buildPath = (parentId: string) => `${parentPath}/${parentId}/${childPath}`;
+          const buildPath = (parentId: string) => withPrefix(`${parentPath}/${parentId}/${childPath}`);
           return {
             get: parentId => getEntityService.call(name, buildPath(parentId)),
             set: (parentId, options) => createSingleEntityService.call(buildPath(parentId), options),
@@ -80,7 +80,19 @@ import * as Services from './services';
         Services.WatchChangesService,
       ],
     },
-  ],
+  ];
+};
+
+@Global()
+@Module({
+  providers: buildProviders(),
   exports: [etcdClientKey, repositoryFactoryServiceKey],
 })
-export class EtcdModule {}
+export class EtcdModule {
+  public static register(options: IEtcdModuleOptions): DynamicModule {
+    return {
+      module: EtcdModule,
+      providers: buildProviders(options),
+    };
+  }
+}

@@ -10,4 +10,5 @@ export * from './IChildRepository';
 export * from './ISingleRepository';
 export * from './IGetOneEntityOptions';
 export * from './IChildSingleRepository';
+export * from './IEtcdModuleOptions';
 export * from './ICreateChildRepositoryOptions';
