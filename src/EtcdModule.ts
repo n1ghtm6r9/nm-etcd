@@ -1,3 +1,4 @@
+import { of } from 'rxjs';
 import { Etcd3 } from 'etcd3';
 import { DynamicModule, Global, Module } from '@nestjs/common';
 import { configKey, IConfig } from '@nmxjs/config';
@@ -5,7 +6,7 @@ import { etcdClientKey, repositoryFactoryServiceKey } from './constants';
 import { IEtcdClient, IEtcdModuleOptions, IRepositoryFactoryService } from './interfaces';
 import * as Services from './services';
 
-const buildProviders = ({ entitiesPrefix }: IEtcdModuleOptions = {}) => {
+const buildProviders = ({ entitiesPrefix, mock }: IEtcdModuleOptions = {}) => {
   const withPrefix = (path: string) => (entitiesPrefix ? `${entitiesPrefix}/${path}` : path);
   return [
     ...Object.values(Services),
@@ -38,35 +39,35 @@ const buildProviders = ({ entitiesPrefix }: IEtcdModuleOptions = {}) => {
         watchChangesService: Services.WatchChangesService,
       ): IRepositoryFactoryService => ({
         create: ({ path, name }) => ({
-          get: () => getEntitiesService.call(withPrefix(path)),
-          getOne: id => getEntityService.call(name, withPrefix(path), id),
-          create: options => createEntitiesService.call(withPrefix(path), options),
-          update: options => updateEntityService.call(withPrefix(path), options),
-          delete: id => deleteEntityService.call(withPrefix(path), id),
-          watch: () => watchChangesService.call(withPrefix(path)),
+          get: () => (mock ? Promise.resolve<any>({}) : getEntitiesService.call(withPrefix(path))),
+          getOne: id => (mock ? Promise.resolve<any>({}) : getEntityService.call(name, withPrefix(path), id)),
+          create: options => (mock ? Promise.resolve<any>({}) : createEntitiesService.call(withPrefix(path), options)),
+          update: options => (mock ? Promise.resolve<any>({}) : updateEntityService.call(withPrefix(path), options)),
+          delete: id => (mock ? Promise.resolve<any>({}) : deleteEntityService.call(withPrefix(path), id)),
+          watch: () => (mock ? of({}) : watchChangesService.call(withPrefix(path))),
         }),
         createSingle: ({ path, name }) => ({
-          get: () => getEntityService.call(name, withPrefix(path)),
-          set: options => createSingleEntityService.call(withPrefix(path), options),
-          delete: () => deleteEntityService.call(withPrefix(path)),
+          get: () => (mock ? Promise.resolve<any>({}) : getEntityService.call(name, withPrefix(path))),
+          set: options => (mock ? Promise.resolve<any>({}) : createSingleEntityService.call(withPrefix(path), options)),
+          delete: () => (mock ? Promise.resolve<any>({}) : deleteEntityService.call(withPrefix(path))),
         }),
         createChild: ({ parentPath, childPath, name }) => {
           const buildPath = (parentId: string) => withPrefix(`${parentPath}/${parentId}/${childPath}`);
           return {
-            get: parentId => getEntitiesService.call(buildPath(parentId)),
-            getOne: (parentId, id) => getEntityService.call(name, buildPath(parentId), id),
-            create: (parentId, options) => createEntitiesService.call(buildPath(parentId), options),
-            update: (parentId, options) => updateEntityService.call(buildPath(parentId), options),
-            delete: (parentId, id) => deleteEntityService.call(buildPath(parentId), id),
-            watch: () => watchChangesService.call(parentPath),
+            get: parentId => (mock ? Promise.resolve<any>({}) : getEntitiesService.call(buildPath(parentId))),
+            getOne: (parentId, id) => (mock ? Promise.resolve<any>({}) : getEntityService.call(name, buildPath(parentId), id)),
+            create: (parentId, options) => (mock ? Promise.resolve<any>({}) : createEntitiesService.call(buildPath(parentId), options)),
+            update: (parentId, options) => (mock ? Promise.resolve<any>({}) : updateEntityService.call(buildPath(parentId), options)),
+            delete: (parentId, id) => (mock ? Promise.resolve<any>({}) : deleteEntityService.call(buildPath(parentId), id)),
+            watch: () => (mock ? of({}) : watchChangesService.call(parentPath)),
           };
         },
         createSingleChild: ({ parentPath, childPath, name }) => {
           const buildPath = (parentId: string) => withPrefix(`${parentPath}/${parentId}/${childPath}`);
           return {
-            get: parentId => getEntityService.call(name, buildPath(parentId)),
-            set: (parentId, options) => createSingleEntityService.call(buildPath(parentId), options),
-            delete: parentId => deleteEntityService.call(buildPath(parentId)),
+            get: parentId => (mock ? Promise.resolve<any>({}) : getEntityService.call(name, buildPath(parentId))),
+            set: (parentId, options) => (mock ? Promise.resolve<any>({}) : createSingleEntityService.call(buildPath(parentId), options)),
+            delete: parentId => (mock ? Promise.resolve<any>({}) : deleteEntityService.call(buildPath(parentId))),
           };
         },
       }),
